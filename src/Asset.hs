@@ -10,7 +10,7 @@ import Data.Semigroup ((<>))
 import Data.Text (Text)
 import qualified Data.Text as Text
 import qualified System.Directory as Dir
-import System.FilePath (FilePath)
+import System.FilePath (FilePath, (</>))
 import qualified System.FilePath as Path
 
 data Asset
@@ -24,7 +24,7 @@ fromPath fp = do
   name <- pathToName fp
   if isDir
     then do
-      files <- Dir.listDirectory fp
+      files <- fmap (fp </>) <$> Dir.listDirectory fp
       AssetDir name fp <$> traverse fromPath files
     else do
       pure $ AssetFile name fp

@@ -8,7 +8,6 @@ import Data.Semigroup ((<>))
 import Data.Text (Text)
 import qualified Data.Text as Text
 import System.FilePath (FilePath)
-import qualified System.FilePath as Path
 
 import Asset (Asset(..))
 
@@ -26,26 +25,26 @@ genImports =
         AssetDir _name fp assets ->
           concatMap (go $ fp : path) assets
         AssetFile name fp ->
-          let
-            fname = Path.joinPath . reverse $ fp : path
-          in
-          [ "import " <> name <> " from \"" <> Text.pack fname <> "\";" ]
+          [ "import " <> name <> " from \"" <> Text.pack fp <> "\";" ]
 
 genExport :: Asset -> Text
 genExport =
-  Text.unlines . go ""
+  Text.unlines . go "" True
   where
-    go :: Text -> Asset -> [Text]
-    go indent asset =
+    go :: Text -> Bool -> Asset -> [Text]
+    go indent isLast asset =
       case asset of
         AssetDir name _fp assets ->
           let
             ( hd, term ) =
               case indent of
                 "" -> ( "export default {", ";" )
-                _ -> ( indent <> name <> ": {", "," )
+                _ -> ( indent <> name <> ": {", if isLast then "" else "," )
           in
-          hd : concatMap (go $ indent <> "  ") assets <> [ indent <> "}" <> term ]
+          hd
+          : concatMap (go (indent <> "  ") False) (init assets)
+          <> (go (indent <> "  ") True $ last assets)
+          <> [ indent <> "}" <> term ]
         AssetFile name _fp ->
-          [ indent <> name <> ": " <> name <> "," ]
+          [ indent <> name <> ": " <> name <> if isLast then "" else "," ]
         
