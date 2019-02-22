@@ -42,9 +42,11 @@ genExport =
                 _ -> ( indent <> name <> ": {", if isLast then "" else "," )
           in
           hd
-          : concatMap (go (indent <> "  ") False) (init assets)
-          <> (go (indent <> "  ") True $ last assets)
+          : concatMap (go (indent <> indentText) False) (init assets)
+          <> (go (indent <> indentText) True $ last assets)
           <> [ indent <> "}" <> term ]
         AssetFile name _fp ->
           [ indent <> name <> ": " <> name <> if isLast then "" else "," ]
         
+indentText :: Text
+indentText = Text.replicate 2 " "

@@ -72,12 +72,17 @@ genDecoder asset =
             _ -> 
               indentText
                 <> indent
-                <> "|> Decode.andMap (Decode.field \""
+                <> "|> Decode.andMap\n"
+                <> Text.replicate 2 indentText <> indent <> "(Decode.field \""
                 <> name
-                <> "\" (Decode.succeed "
+                <> "\"\n"
+                <> Text.replicate 3 indentText <> indent <> "(Decode.succeed "
                 <> Text.toTitle name
-              : concatMap (go $ indentText <> indent) assets
-              <> [ indentText <> indent <> "))" ] 
+              : concatMap (go $ Text.replicate 3 indentText <> indent) assets
+              <>
+                [ Text.replicate 3 indentText <> indent <> ")"
+                , Text.replicate 2 indentText <> indent <> ")"
+                ] 
         AssetFile name _fp ->
           [ indentText
             <> indent
