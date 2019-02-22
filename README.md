@@ -41,11 +41,11 @@ import gothamOtf from "../assets/fonts/Gotham.otf";
 export default {
   icons: {
     arrowUpSvg: arrowUpSvg,
-    arrowDownSvg: arrowDownSvg,
+    arrowDownSvg: arrowDownSvg
   },
   fonts: {
-    gothamOtf: gothamOtf,
-  },
+    gothamOtf: gothamOtf
+  }
 };
 ```
 
