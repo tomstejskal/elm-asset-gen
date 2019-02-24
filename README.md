@@ -34,17 +34,17 @@ If the structure of the assets directory is like this:
 the `Assets.js` module will contain:
 
 ```js
-import arrowUpSvg from "../assets/icons/arrow-up.svg";
-import arrowDownSvg from "../assets/icons/arrow-down.svg";
-import gothamOtf from "../assets/fonts/Gotham.otf";
+import assets_icons_arrowUpSvg from "../assets/icons/arrow-up.svg";
+import assets_icons_arrowDownSvg from "../assets/icons/arrow-down.svg";
+import assets_fonts_gothamOtf from "../assets/fonts/Gotham.otf";
 
 export default {
   icons: {
-    arrowUpSvg: arrowUpSvg,
-    arrowDownSvg: arrowDownSvg
+    arrowUpSvg: assets_icons_arrowUpSvg,
+    arrowDownSvg: assets_icons_arrowDownSvg
   },
   fonts: {
-    gothamOtf: gothamOtf
+    gothamOtf: assets_fonts_gothamOtf
   }
 };
 ```
