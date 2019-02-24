@@ -4,7 +4,7 @@
 module Main where
 
 import Data.Semigroup ((<>))
-import qualified Data.Text.IO as Text
+import qualified Data.Text.Lazy.IO as Text
 import Options.Applicative ((<**>))
 import qualified Options.Applicative as Opt
 import qualified System.Directory as Dir

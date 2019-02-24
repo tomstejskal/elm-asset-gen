@@ -2,8 +2,7 @@
 
 module Main where
 
-import qualified Data.Text.Encoding as Encoding
-import qualified Data.ByteString.Lazy as Lazy
+import qualified Data.Text.Lazy.Encoding as Encoding
 import System.FilePath ((</>))
 import Test.Tasty (TestTree)
 import qualified Test.Tasty as Tasty
@@ -26,9 +25,9 @@ tests = Tasty.testGroup "Assets"
 testElm :: TestTree
 testElm = Golden.goldenVsString "Assets.elm" ("test" </> "Assets.elm") $ do
   assets <- Asset.fromPath $ "test" </> "assets"
-  pure . Lazy.fromStrict . Encoding.encodeUtf8 . Elm.gen $ assets
+  pure . Encoding.encodeUtf8 . Elm.gen $ assets
 
 testJS :: TestTree
 testJS = Golden.goldenVsString "Assets.js" ("test" </> "Assets.js") $ do
   assets <- Asset.fromPath $ "test" </> "assets"
-  pure . Lazy.fromStrict . Encoding.encodeUtf8 . JS.gen $ assets
+  pure . Encoding.encodeUtf8 . JS.gen $ assets

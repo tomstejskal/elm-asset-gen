@@ -8,8 +8,8 @@ import Control.Monad.Writer (Writer)
 import qualified Control.Monad.Writer as Writer
 import qualified Data.Maybe as Maybe
 import Data.Semigroup ((<>))
-import Data.Text (Text)
-import qualified Data.Text as Text
+import Data.Text.Lazy (Text)
+import qualified Data.Text.Lazy as Text
 
 import Asset (Asset(..))
 

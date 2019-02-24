@@ -7,8 +7,8 @@ module Asset
 
 import qualified Data.Char as Char
 import Data.Semigroup ((<>))
-import Data.Text (Text)
-import qualified Data.Text as Text
+import Data.Text.Lazy (Text)
+import qualified Data.Text.Lazy as Text
 import qualified System.Directory as Dir
 import System.FilePath (FilePath, (</>))
 import qualified System.FilePath as Path
