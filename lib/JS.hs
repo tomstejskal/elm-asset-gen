@@ -7,7 +7,6 @@ module JS
 import Data.Semigroup ((<>))
 import Data.Text (Text)
 import qualified Data.Text as Text
-import System.FilePath (FilePath)
 
 import Asset (Asset(..))
 
@@ -19,20 +18,20 @@ genImports :: Asset -> Text
 genImports =
   Text.unlines . go []
   where
-    go :: [FilePath] -> Asset -> [Text]
+    go :: [Text] -> Asset -> [Text]
     go path asset =
       case asset of
-        AssetDir _name fp assets ->
-          concatMap (go $ fp : path) assets
+        AssetDir name _fp assets ->
+          concatMap (go $ name : path)  assets
         AssetFile name fp ->
-          [ "import " <> name <> " from \"" <> Text.pack fp <> "\";" ]
+          [ "import " <> importName path name <> " from \"" <> Text.pack fp <> "\";" ]
 
 genExport :: Asset -> Text
 genExport =
-  Text.unlines . go "" True
+  Text.unlines . go "" True []
   where
-    go :: Text -> Bool -> Asset -> [Text]
-    go indent isLast asset =
+    go :: Text -> Bool -> [Text] -> Asset -> [Text]
+    go indent isLast path asset =
       case asset of
         AssetDir name _fp assets ->
           let
@@ -42,11 +41,14 @@ genExport =
                 _ -> ( indent <> name <> ": {", if isLast then "" else "," )
           in
           hd
-          : concatMap (go (indent <> indentText) False) (init assets)
-          <> (go (indent <> indentText) True $ last assets)
+          : concatMap (go (indent <> indentText) False $ name : path) (init assets)
+          <> (go (indent <> indentText) True (name : path) $ last assets)
           <> [ indent <> "}" <> term ]
         AssetFile name _fp ->
-          [ indent <> name <> ": " <> name <> if isLast then "" else "," ]
+          [ indent <> name <> ": " <> importName path name <> if isLast then "" else "," ]
         
 indentText :: Text
 indentText = Text.replicate 2 " "
+
+importName :: [Text] -> Text -> Text
+importName path name = Text.intercalate "_" . reverse $ name : path
