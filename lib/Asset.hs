@@ -1,8 +1,9 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
 
 module Asset
   ( Asset(..)
-  , fromPath
+  , load
   ) where
 
 import qualified Data.Char as Char
@@ -13,21 +14,32 @@ import qualified System.Directory as Dir
 import System.FilePath (FilePath, (</>))
 import qualified System.FilePath as Path
 
+import Options (Options(..))
+
 data Asset
   = AssetFile Text FilePath
   | AssetDir Text FilePath [Asset]
   deriving (Show)
 
-fromPath :: FilePath -> IO Asset
-fromPath fp = do
-  isDir <- Dir.doesDirectoryExist fp
-  name <- pathToName fp
-  if isDir
-    then do
-      files <- fmap (fp </>) <$> Dir.listDirectory fp
-      AssetDir name fp <$> traverse fromPath files
-    else do
-      pure $ AssetFile name fp
+load :: Options -> IO Asset
+load options = do
+  let Options{..} = options
+  absolutePath <- Dir.makeAbsolute path
+  outputPath' <- maybe Dir.getCurrentDirectory pure outputPath
+  Dir.withCurrentDirectory outputPath' $ do
+    path' <- Dir.makeRelativeToCurrentDirectory absolutePath
+    go path'
+  where
+    go :: FilePath -> IO Asset
+    go fp = do
+      isDir <- Dir.doesDirectoryExist fp
+      name <- pathToName fp
+      if isDir
+        then do
+          files <- fmap (fp </>) <$> Dir.listDirectory fp
+          AssetDir name fp <$> traverse go files
+        else do
+          pure $ AssetFile name fp
 
 pathToName :: FilePath -> IO Text
 pathToName fp = do
