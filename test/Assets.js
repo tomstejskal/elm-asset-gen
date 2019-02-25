@@ -1,6 +1,6 @@
-import assets_icons_arrowUpSvg from "assets/icons/arrow-up.svg";
-import assets_icons_arrowDownSvg from "assets/icons/arrow-down.svg";
-import assets_fonts_gothamOtf from "assets/fonts/Gotham.otf";
+import assets_icons_arrowUpSvg from "test/assets/icons/arrow-up.svg";
+import assets_icons_arrowDownSvg from "test/assets/icons/arrow-down.svg";
+import assets_fonts_gothamOtf from "test/assets/fonts/Gotham.otf";
 
 export default {
   icons: {
