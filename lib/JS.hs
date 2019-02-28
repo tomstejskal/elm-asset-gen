@@ -7,6 +7,7 @@ module JS
 import Data.Semigroup ((<>))
 import Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as Text
+import qualified System.FilePath as Path
 
 import Asset (Asset(..))
 
@@ -24,7 +25,11 @@ genImports =
         AssetDir name _fp assets ->
           concatMap (go $ name : path)  assets
         AssetFile name fp ->
-          [ "import " <> importName path name <> " from \"" <> Text.pack fp <> "\";" ]
+          let
+            fname =
+              Text.intercalate "/" . fmap Text.pack . Path.splitDirectories $ fp
+          in
+          [ "import " <> importName path name <> " from \"" <> fname <> "\";" ]
 
 genExport :: Asset -> Text
 genExport =
