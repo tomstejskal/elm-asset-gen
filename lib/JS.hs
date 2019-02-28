@@ -39,11 +39,14 @@ genExport =
               case indent of
                 "" -> ( "export default {", ";" )
                 _ -> ( indent <> name <> ": {", if isLast then "" else "," )
+            body =
+              case assets of
+                [] -> []
+                _ ->
+                  concatMap (go (indent <> indentText) False $ name : path) (init assets)
+                  <> (go (indent <> indentText) True (name : path) $ last assets)
           in
-          hd
-          : concatMap (go (indent <> indentText) False $ name : path) (init assets)
-          <> (go (indent <> indentText) True (name : path) $ last assets)
-          <> [ indent <> "}" <> term ]
+          hd : body <> [ indent <> "}" <> term ]
         AssetFile name _fp ->
           [ indent <> name <> ": " <> importName path name <> if isLast then "" else "," ]
         

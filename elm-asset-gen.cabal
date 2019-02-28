@@ -1,6 +1,6 @@
 cabal-version:       >=1.10
 name:                elm-asset-gen
-version:             0.1.0.0
+version:             0.1.1
 synopsis:            Elm asset module generator
 description:         See https://github.com/tomstejskal/elm-asset-gen#readme
 license:             BSD3
