@@ -6,6 +6,7 @@ module Asset
   ) where
 
 import qualified Data.Char as Char
+import qualified Data.List as List
 import Data.Semigroup ((<>))
 import Data.Text.Lazy (Text)
 import qualified Data.Text.Lazy as Text
@@ -24,7 +25,7 @@ fromPath fp = do
   name <- pathToName fp
   if isDir
     then do
-      files <- fmap (fp </>) <$> Dir.listDirectory fp
+      files <- List.sort . fmap (fp </>) <$> Dir.listDirectory fp
       AssetDir name fp <$> traverse fromPath files
     else do
       pure $ AssetFile name fp
