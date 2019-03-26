@@ -25,7 +25,7 @@ tests = Tasty.testGroup "Assets"
 testElm :: TestTree
 testElm = Golden.goldenVsString "Assets.elm" ("test" </> "Assets.elm") $ do
   assets <- Asset.fromPath $ "test" </> "assets"
-  pure . Encoding.encodeUtf8 . Elm.gen $ assets
+  pure . Encoding.encodeUtf8 . Elm.gen "Assets" $ assets
 
 testJS :: TestTree
 testJS = Golden.goldenVsString "Assets.js" ("test" </> "Assets.js") $ do

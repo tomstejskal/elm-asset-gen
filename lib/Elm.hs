@@ -13,17 +13,17 @@ import qualified Data.Text.Lazy as Text
 
 import Asset (Asset(..))
 
-gen :: Asset -> Text
-gen asset =
-  genModuleHeader
-  <> (Text.unlines . Writer.execWriter $ genType (Just "Assets") asset)
+gen :: Text -> Asset -> Text
+gen moduleName asset =
+  genModuleHeader moduleName
+  <> (Text.unlines . Writer.execWriter $ genType (Just moduleName) asset)
   <> "\n\n"
-  <> genDecoder asset
+  <> genDecoder moduleName asset
 
-genModuleHeader :: Text
-genModuleHeader =
+genModuleHeader :: Text -> Text
+genModuleHeader moduleName =
   Text.unlines 
-    [ "module Assets exposing (Assets, decoder)"
+    [ "module " <> moduleName <> " exposing (" <> moduleName <> ", decoder)"
     , "" 
     , "import Json.Decode as Decode"
     , "import Json.Decode.Extra as Decode"
@@ -55,10 +55,10 @@ genType name asset = do
             indentText <> "{ " <> x <> "\n"
             <> (Text.unlines $ ((indentText <> ", ") <>) <$> xs)
 
-genDecoder :: Asset -> Text
-genDecoder asset =
+genDecoder :: Text -> Asset -> Text
+genDecoder moduleName asset =
   Text.unlines
-    $ "decoder : Decode.Decoder Assets"
+    $ "decoder : Decode.Decoder " <> moduleName
     : "decoder ="
     : go "" asset
   where
@@ -68,7 +68,7 @@ genDecoder asset =
         AssetDir name _fp assets ->
           case indent of
             "" ->
-              indentText <> "Decode.succeed Assets" : concatMap (go indentText) assets
+              indentText <> "Decode.succeed " <> moduleName : concatMap (go indentText) assets
             _ -> 
               indentText
                 <> indent

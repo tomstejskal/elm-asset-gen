@@ -1,27 +1,36 @@
 {-# LANGUAGE OverloadedStrings #-}
-
 module Options
   ( Options(..)
   , parser
   ) where
 
 import Data.Semigroup ((<>))
-import qualified Options.Applicative as Opt
+import Data.Text.Lazy (Text)
+import Options.Applicative
 import System.FilePath (FilePath)
 
 data Options = Options
   { path :: FilePath
   , forceOverwrite :: Bool
+  , moduleName :: Maybe Text
   }
 
-parser :: Opt.Parser Options
+parser :: Parser Options
 parser =
-  Options <$> pathArg <*> forceOverwriteSwitch
+  Options <$> pathArg <*> forceOverwriteSwitch <*> moduleNameOption
   where
     pathArg =
-      Opt.argument Opt.str (Opt.metavar "PATH")
+      argument str (metavar "PATH")
     forceOverwriteSwitch =
-      Opt.switch $
-        Opt.long "force-overwrite"
-        <> Opt.short 'f'
-        <> Opt.help "Force overwrite output files"
+      switch $
+        long "force-overwrite"
+        <> short 'f'
+        <> help "Force overwrite output files"
+    moduleNameOption =
+      fmap Just
+        ( strOption $
+          long "module-name"
+          <> short 'm'
+          <> help "Output module name"
+        )
+      <|> pure Nothing 
